@@ -3,9 +3,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-var plivode = require('plivode');
+var connect = require('connect')
+  , plivo   = require('../')
 
-new plivode.App({
+var plivo_middleware = plivo.middleware({
     appID: '[your Plivo app ID]',
     authID: '[your Plivo auth ID]',
     authToken: '[your Plivo auth token]',
@@ -101,3 +102,10 @@ new plivode.App({
     console.log('call ended with: ' + params.From);
     console.log(params);
 });
+
+var app = connect()
+    .use(connect.logger('dev'))
+    .use(connect.static('public'))
+    .use(connect.bodyParser())
+    .use(plivo_middleware)
+    .listen(3000);
